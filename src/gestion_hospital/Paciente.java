@@ -1,0 +1,69 @@
+
+package gestion_hospital;
+
+public class Paciente {
+    
+    int id;
+    String nombre;
+    int edad;
+    int prioridad;
+    String diagnostico;
+
+    public Paciente(int id, String nombre, int edad, int prioridad, String diagnostico) {
+        this.id = id;
+        this.nombre = nombre;
+        this.edad = edad;
+        this.prioridad = prioridad;
+        this.diagnostico = diagnostico;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public int getPrioridad() {
+        return prioridad;
+    }
+
+    public void setPrioridad(int prioridad) {
+        this.prioridad = prioridad;
+    }
+
+    public String getDiagnostico() {
+        return diagnostico;
+    }
+
+    public void setDiagnostico(String diagnostico) {
+        this.diagnostico = diagnostico;
+    }
+
+    @Override
+    public String toString() {
+        return "Paciente{" + "id:" + id + ", nombre:" + nombre + ", edad:" + edad + ", prioridad:" + prioridad + ", diagnostico:" + diagnostico + '}';
+    }
+    
+    
+    
+    
+    
+}
