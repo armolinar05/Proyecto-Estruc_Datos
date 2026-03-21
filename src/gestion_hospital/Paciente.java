@@ -1,13 +1,12 @@
-
 package gestion_hospital;
 
 public class Paciente {
-    
-    int id;
-    String nombre;
-    int edad;
-    int prioridad;
-    String diagnostico;
+
+    private int id;
+    private String nombre;
+    private int edad;
+    private int prioridad;
+    private String diagnostico;
 
     public Paciente(int id, String nombre, int edad, int prioridad, String diagnostico) {
         this.id = id;
@@ -61,9 +60,5 @@ public class Paciente {
     public String toString() {
         return "Paciente{" + "id:" + id + ", nombre:" + nombre + ", edad:" + edad + ", prioridad:" + prioridad + ", diagnostico:" + diagnostico + '}';
     }
-    
-    
-    
-    
-    
+
 }
