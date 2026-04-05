@@ -9,10 +9,10 @@ public class Paciente {
     private String diagnostico;
     private String AreaActualDelPaciente;
 
-    public Paciente(int id, String nombre, int edad, int prioridad, String diagnostico, String AreaActualDelPaciente) {
+    public Paciente(int id, String nombre, int prioridad, String diagnostico, String AreaActualDelPaciente) {
         this.id = id;
         this.nombre = nombre;
-        this.edad = edad;
+      
         this.prioridad = prioridad;
         this.diagnostico = diagnostico;
         this.AreaActualDelPaciente = AreaActualDelPaciente;
@@ -35,13 +35,7 @@ public class Paciente {
         this.nombre = nombre;
     }
 
-    public int getEdad() {
-        return edad;
-    }
-
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
+  
 
     public int getPrioridad() {
         return prioridad;
