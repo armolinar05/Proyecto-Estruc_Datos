@@ -15,6 +15,7 @@ public class Gestion_Hospital {
            
             String menu = """
                     === HOSPITAL ===
+                          
                     1. Registrar paciente
                     2. Mostrar árbol
                     3. Mostrar cola
@@ -37,10 +38,10 @@ public class Gestion_Hospital {
                     String nombre = JOptionPane.showInputDialog("Nombre:");
                     int prioridad = Integer.parseInt(JOptionPane.showInputDialog("Prioridad:"));
                     String diagnostico = JOptionPane.showInputDialog("Digite el diagnostico del paciente:");
-                    String AreaActualDelPaciente = JOptionPane.showInputDialog("Digite el area del hospital donde se encuentra el paciente:");
+                    //String AreaActualDelPaciente = JOptionPane.showInputDialog("Digite el area del hospital donde se encuentra el paciente:");
                     
                     
-                    Paciente p = new Paciente(id, nombre, prioridad, diagnostico, AreaActualDelPaciente);
+                    Paciente p = new Paciente(id, nombre, prioridad, diagnostico);
 
                     arbol.insertar(p);
                     cola.encolar(p);
@@ -96,10 +97,10 @@ public class Gestion_Hospital {
 //                    grafo.conectar(a,b);
 //                }
 //
-//                case 7 -> JOptionPane.showMessageDialog(null,
-//                    grafo.mostrar().isEmpty() ? "Sin datos" : grafo.mostrar());
-//
-//                case 8 -> JOptionPane.showMessageDialog(null, "Saliendo...");
+                 case 7 -> JOptionPane.showMessageDialog(null,
+                    grafo.mostrar().isEmpty() ? "Sin datos" : grafo.mostrar());
+
+               case 8 -> JOptionPane.showMessageDialog(null, "Saliendo...");
             }
 
         } while (true);

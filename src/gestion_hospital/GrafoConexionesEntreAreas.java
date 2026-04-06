@@ -32,12 +32,30 @@ public class GrafoConexionesEntreAreas {
     public int numArea(String nombre){
         
         for (int i = 0; i < numAreas;i++){
-            if(areas[i].nombreDelAreaDeTraslado().equalsIgnoreCase(nombre));
+            if(areas[i].nombreDelAreaDeTraslado().equalsIgnoreCase(nombre))
                return i;
         }
         return -1;
    
     }    
+    
+    public String mostrar (){
+        if (numAreas == 0) {
+            return "No hay áreas registradas.";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("=== Áreas del Hospital ===\n");
+
+        for (int i = 0; i < numAreas; i++) {
+            
+            sb.append(i+1).append(" - ");
+        }
+
+        sb.append("Total de áreas: ").append(numAreas);
+        return sb.toString();
+    
+    }
     
     //agregar metodo  de traslado de pacientes, **investigar lo de rutas optimas
 }

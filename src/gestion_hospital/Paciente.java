@@ -7,14 +7,14 @@ public class Paciente {
     private int edad;
     private int prioridad;
     private String diagnostico;
-    private String AreaActualDelPaciente;
+    private VerticeTrasladosEntreaAreas AreaActualDelPaciente;
 
-    public Paciente(int id, String nombre, int prioridad, String diagnostico, String AreaActualDelPaciente) {
+    public Paciente(int id, String nombre, int prioridad, String diagnostico) {
         this.id = id;
         this.nombre = nombre;
         this.prioridad = prioridad;
         this.diagnostico = diagnostico;
-        this.AreaActualDelPaciente = AreaActualDelPaciente;
+        
         
     }
 
@@ -48,12 +48,8 @@ public class Paciente {
     public void setDiagnostico(String diagnostico) {
         this.diagnostico = diagnostico;
     }
-    public String GetAreaActualDelPaciente(){
-        return AreaActualDelPaciente;
-    }
-    public void SetAreaActualDelPaciente (String AreaActualDelPaciente){
-        this.AreaActualDelPaciente = AreaActualDelPaciente;
-    }
+
+    
     
 
     @Override
