@@ -12,7 +12,6 @@ public class Paciente {
     public Paciente(int id, String nombre, int prioridad, String diagnostico, String AreaActualDelPaciente) {
         this.id = id;
         this.nombre = nombre;
-      
         this.prioridad = prioridad;
         this.diagnostico = diagnostico;
         this.AreaActualDelPaciente = AreaActualDelPaciente;
@@ -34,9 +33,6 @@ public class Paciente {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-
-  
-
     public int getPrioridad() {
         return prioridad;
     }
@@ -62,7 +58,7 @@ public class Paciente {
 
     @Override
     public String toString() {
-        return "Paciente{" + "id:" + id + ", nombre:" + nombre + ", edad:" + edad + ", prioridad:" + prioridad + ", diagnostico:" + diagnostico +
+        return "Paciente{" + "id:" + id + ", nombre:" + nombre + ", prioridad:" + prioridad + ", diagnostico:" + diagnostico +
                 "Area actual del paciente" +  AreaActualDelPaciente + '}';
     }
 

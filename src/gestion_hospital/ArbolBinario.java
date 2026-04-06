@@ -8,16 +8,16 @@ public class ArbolBinario {
         this.raiz = null;
     }
     
-    private Nodo insertarRecursivo(Nodo actual, Paciente paciente){
-        
-        if(actual == null){
+    private Nodo insertarRecursivo(Nodo actual, Paciente paciente) {
+        if (actual == null) {
             return new Nodo(paciente);
         }
-        if(paciente.getId() < actual.dato.getId()){
+        int comparacion = paciente.getNombre().compareToIgnoreCase(actual.dato.getNombre());
+        if (comparacion < 0) {
             actual.izquierda = insertarRecursivo(actual.izquierda, paciente);
-        }else if(paciente.getId() > actual.dato.getId()){
+        } else if (comparacion > 0) {
                 actual.derecha = insertarRecursivo(actual.derecha, paciente);
-        }
+               }
         return actual;
     }
     
@@ -47,49 +47,37 @@ public class ArbolBinario {
         return null; 
     }
     
-    //Pacientes ordenados de menor a mayor por ID
-    //(Izquierda -> Raíz -> Derecha)
-    //Reportes ordenados
-    private void in_Orden (Nodo actual){
-        if(actual != null){
-            in_Orden(actual.izquierda);
-            System.out.println(actual.dato.toString());
-            in_Orden(actual.derecha);
-        }
-    } 
-    
-    //Anota primero al jefe (la raíz) y luego a los hijos
-    //(Raíz -> Izquierda -> Derecha)
-    //Para respaldar o clonar el arbol
-    private void pre_Orden(Nodo actual){
-        if(actual != null){
-           System.out.println(actual.dato.toString());
-           pre_Orden(actual.izquierda);
-           pre_Orden(actual.derecha);           
-        }
-    }
-    
-    //Visita primero todos los hijos (las hojas) y de último deja a la raíz
-    //(Izquierda -> Derecha -> Raíz)
-    //Para borrar o liberar memoria
-    private void post_Orden(Nodo actual){
-        if (actual != null) {
-            post_Orden(actual.izquierda);
-            post_Orden(actual.derecha);
-            System.out.println(actual.dato.toString());
-        }
-    }
-    
-    public void mostrarInOrden(){
-        in_Orden(this.raiz);
-    }
-    
-    public void mostrarPreOrden() {
-        pre_Orden(this.raiz);
+    private String in_Orden(Nodo actual) {
+        if (actual == null) return "";
+            return in_Orden(actual.izquierda)
+                 + actual.dato.toString() + "\n"
+                 + in_Orden(actual.derecha);
     }
 
-    public void mostrarPostOrden() {
-        post_Orden(this.raiz);
+    private String pre_Orden(Nodo actual) {
+        if (actual == null) return "";
+            return actual.dato.toString() + "\n"
+                + pre_Orden(actual.izquierda)
+                + pre_Orden(actual.derecha);
+    }
+
+    private String post_Orden(Nodo actual) {
+        if (actual == null) return "";
+            return post_Orden(actual.izquierda)
+                 + post_Orden(actual.derecha)
+                 + actual.dato.toString() + "\n";
+    }
+
+    public String mostrarInOrden() {
+        return in_Orden(this.raiz);
+    }
+
+    public String mostrarPreOrden() {
+        return pre_Orden(this.raiz);
+    }
+
+    public String mostrarPostOrden() {
+        return post_Orden(this.raiz);
     }
     
     private Nodo eliminar_Paciente(Nodo actual, int id) {

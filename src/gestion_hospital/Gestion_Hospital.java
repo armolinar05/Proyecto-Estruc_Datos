@@ -48,8 +48,34 @@ public class Gestion_Hospital {
                     JOptionPane.showMessageDialog(null, "Paciente registrado.");
                 }
                    
-                case 2 -> JOptionPane.showMessageDialog(null,
-                     arbol.mostrarPreOrden().isEmpty() ? "Árbol vacío" : arbol.mostrarPreOrden());
+                case 2 -> {
+                    String menuArbol = """
+                            ¿Cómo desea ver los pacientes?
+                            1. Orden Alfabético (In-Orden)
+                            2. Orden de Ingreso (Pre-Orden)
+                            3. Orden de Salida (Post-Orden)
+                            """;
+
+                    String opcionArbol = JOptionPane.showInputDialog(menuArbol);
+
+                    if (opcionArbol != null) {
+                        String resultado = "";
+
+                        if (opcionArbol.equals("1")) {
+                            resultado = arbol.mostrarInOrden();
+                        } else if (opcionArbol.equals("2")) {
+                            resultado = arbol.mostrarPreOrden();
+                        } else if (opcionArbol.equals("3")) {
+                            resultado = arbol.mostrarPostOrden();
+                        }
+
+                        if (resultado.equals("")) {
+                            JOptionPane.showMessageDialog(null, "El hospital no tiene pacientes aún.");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "--- REPORTE DE PACIENTES ---\n" + resultado);
+                        }
+                    }
+                }
 
                 case 3 -> JOptionPane.showMessageDialog(null,
                     cola.mostrar().isEmpty() ? "Cola vacía" : cola.mostrar());
@@ -64,16 +90,16 @@ public class Gestion_Hospital {
                     JOptionPane.showInputDialog("Nombre del área:")
                 );
 
-                case 6 -> {
-                    String a = JOptionPane.showInputDialog("Área 1:");
-                    String b = JOptionPane.showInputDialog("Área 2:");
-                    grafo.conectar(a,b);
-                }
-
-                case 7 -> JOptionPane.showMessageDialog(null,
-                    grafo.mostrar().isEmpty() ? "Sin datos" : grafo.mostrar());
-
-                case 8 -> JOptionPane.showMessageDialog(null, "Saliendo...");
+//                case 6 -> {
+//                    String a = JOptionPane.showInputDialog("Área 1:");
+//                    String b = JOptionPane.showInputDialog("Área 2:");
+//                    grafo.conectar(a,b);
+//                }
+//
+//                case 7 -> JOptionPane.showMessageDialog(null,
+//                    grafo.mostrar().isEmpty() ? "Sin datos" : grafo.mostrar());
+//
+//                case 8 -> JOptionPane.showMessageDialog(null, "Saliendo...");
             }
 
         } while (true);
