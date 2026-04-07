@@ -9,11 +9,12 @@ public class Paciente {
     private String diagnostico;
     private VerticeTrasladosEntreaAreas AreaActualDelPaciente;
 
-    public Paciente(int id, String nombre, int prioridad, String diagnostico) {
+    public Paciente(int id, String nombre, int prioridad, String diagnostico, VerticeTrasladosEntreaAreas AreaActualDelPaciente) {
         this.id = id;
         this.nombre = nombre;
         this.prioridad = prioridad;
         this.diagnostico = diagnostico;
+        this.AreaActualDelPaciente = AreaActualDelPaciente;
         
         
     }
