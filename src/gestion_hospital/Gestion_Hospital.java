@@ -1,6 +1,5 @@
 package gestion_hospital;
 
-import java.awt.Component;
 import javax.swing.JOptionPane;
 
 public class Gestion_Hospital {
@@ -12,7 +11,7 @@ public class Gestion_Hospital {
         boolean ejecutandose = true;
         int opcion;
 
-         while (ejecutandose!=false){
+        while (ejecutandose) {
 
             String menu = """
                     === HOSPITAL ===
@@ -32,37 +31,83 @@ public class Gestion_Hospital {
             if (input == null) {
                 break;
             }
-            opcion = Integer.parseInt(input);
+
+            try {
+                opcion = Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Ingrese un número válido en el menú.");
+                continue;
+            }
 
             switch (opcion) {
                 case 1 -> {
-                    grafo.nuevoVertice(
-                            JOptionPane.showInputDialog("Nombre del área:")
-                    );
+                    String nombreArea = JOptionPane.showInputDialog("Nombre del área:");
+                    if (nombreArea == null || nombreArea.trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "El nombre del área no puede estar vacío.");
+                        break;
+                    }
+                    if (!nombreArea.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+                        JOptionPane.showMessageDialog(null, "El nombre del área solo puede contener letras.");
+                        break;
+                    }
+                    grafo.nuevoVertice(nombreArea.trim());
                 }
 
                 case 2 -> {
-                    String areasDisponibles;
+                    String areasDisponibles = grafo.getNumAreas() == 0
+                            ? "No hay áreas registradas aún.\n"
+                            : "Áreas disponibles:\n" + grafo.mostrar() + "\n";
 
-                    if (grafo.getNumAreas() == 0) {
-                        areasDisponibles = "No hay áreas registradas aún.\n";
-                    } else {
-                        areasDisponibles = "Áreas disponibles:\n" + grafo.mostrar() + "\n";
+                    int id;
+                    try {
+                        String idInput = JOptionPane.showInputDialog("Cédula:");
+                        id = Integer.parseInt(idInput);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "La cédula debe ser un número.");
+                        break;
                     }
 
-                    int id = Integer.parseInt(JOptionPane.showInputDialog("Cédula:"));
                     String nombre = JOptionPane.showInputDialog("Nombre:");
-                    int prioridad = Integer.parseInt(JOptionPane.showInputDialog("Prioridad:"));
+                    if (nombre == null || nombre.trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "El nombre no puede estar vacío.");
+                        break;
+                    }
+                    if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+                        JOptionPane.showMessageDialog(null, "El nombre solo puede contener letras.");
+                        break;
+                    }
+
+                    int prioridad;
+                    try {
+                        String prioridadInput = JOptionPane.showInputDialog("Prioridad:");
+                        prioridad = Integer.parseInt(prioridadInput);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "La prioridad debe ser un número.");
+                        break;
+                    }
+
                     String diagnostico = JOptionPane.showInputDialog("Diagnóstico:");
-                    String areaInput = JOptionPane.showInputDialog(areasDisponibles + "Área del paciente (escriba el número):");
-                    int numAreaElegida = Integer.parseInt(areaInput) - 1;
-                    VerticeTrasladosEntreaAreas areaActual = grafo.getArea(numAreaElegida);
+                    if (diagnostico == null || diagnostico.trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "El diagnóstico no puede estar vacío.");
+                        break;
+                    }
+
+                    VerticeTrasladosEntreaAreas areaActual;
+                    try {
+                        String areaInput = JOptionPane.showInputDialog(areasDisponibles + "Área del paciente (escriba el número):");
+                        int numAreaElegida = Integer.parseInt(areaInput) - 1;
+                        areaActual = grafo.getArea(numAreaElegida);
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "El número de área debe ser un número.");
+                        break;
+                    }
 
                     if (areaActual == null) {
                         JOptionPane.showMessageDialog(null, "Número de área inválido.");
                         break;
                     }
-                    Paciente p = new Paciente(id, nombre, prioridad, diagnostico, areaActual);
+
+                    Paciente p = new Paciente(id, nombre.trim(), prioridad, diagnostico.trim(), areaActual);
                     arbol.insertar(p);
                     cola.encolar(p);
                     JOptionPane.showMessageDialog(null, "Paciente registrado en: " + areaActual.nombreDelAreaDeTraslado());
@@ -77,41 +122,48 @@ public class Gestion_Hospital {
                             """;
 
                     String opcionArbol = JOptionPane.showInputDialog(menuArbol);
+                    if (opcionArbol == null) {
+                        break;
+                    }
 
-                    if (opcionArbol != null) {
-                        String resultado = "";
-
-                        if (opcionArbol.equals("1")) {
+                    String resultado = "";
+                    switch (opcionArbol.trim()) {
+                        case "1" ->
                             resultado = arbol.mostrarInOrden();
-                        } else if (opcionArbol.equals("2")) {
+                        case "2" ->
                             resultado = arbol.mostrarPreOrden();
-                        } else if (opcionArbol.equals("3")) {
+                        case "3" ->
                             resultado = arbol.mostrarPostOrden();
-                        }
-
-                        if (resultado.equals("")) {
-                            JOptionPane.showMessageDialog(null, "El hospital no tiene pacientes aún.");
-                        } else {
-                            JOptionPane.showMessageDialog(null, "--- REPORTE DE PACIENTES ---\n" + resultado);
+                        default -> {
+                            JOptionPane.showMessageDialog(null, "Opción inválida.");
+                            break;
                         }
                     }
+
+                    JOptionPane.showMessageDialog(null,
+                            resultado.isEmpty() ? "El hospital no tiene pacientes aún."
+                            : "--- REPORTE DE PACIENTES ---\n" + resultado);
                 }
 
                 case 4 -> {
                     Paciente atendido = cola.atender();
                     JOptionPane.showMessageDialog(null,
-                            atendido != null ? "Atendido:\n" + atendido : "No hay pacientes");
+                            atendido != null ? "Atendido:\n" + atendido : "No hay pacientes en la cola.");
                 }
-                case 5 -> {
-                    String areasDisponibles;
-                    if (grafo.getNumAreas() == 0) {
-                        areasDisponibles = "No hay áreas registradas aún.\n";
-                    } else {
-                        areasDisponibles = grafo.mostrar() + "\n";
-                    }
 
-                    int numA = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área 1:")) - 1;
-                    int numB = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área 2:")) - 1;
+                case 5 -> {
+                    String areasDisponibles = grafo.getNumAreas() == 0
+                            ? "No hay áreas registradas aún.\n"
+                            : grafo.mostrar() + "\n";
+
+                    int numA, numB;
+                    try {
+                        numA = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área 1:")) - 1;
+                        numB = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área 2:")) - 1;
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Los números de área deben ser números.");
+                        break;
+                    }
 
                     VerticeTrasladosEntreaAreas areaA = grafo.getArea(numA);
                     VerticeTrasladosEntreaAreas areaB = grafo.getArea(numB);
@@ -124,15 +176,18 @@ public class Gestion_Hospital {
                 }
 
                 case 6 -> {
-                    String areasDisponibles;
-                    if (grafo.getNumAreas() == 0) {
-                        areasDisponibles = "No hay áreas registradas aún.\n";
-                    } else {
-                        areasDisponibles = grafo.mostrar() + "\n";
-                    }
+                    String areasDisponibles = grafo.getNumAreas() == 0
+                            ? "No hay áreas registradas aún.\n"
+                            : grafo.mostrar() + "\n";
 
-                    int numOrigen = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área de origen:")) - 1;
-                    int numDestino = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área de destino:")) - 1;
+                    int numOrigen, numDestino;
+                    try {
+                        numOrigen = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área de origen:")) - 1;
+                        numDestino = Integer.parseInt(JOptionPane.showInputDialog(areasDisponibles + "Número del área de destino:")) - 1;
+                    } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(null, "Los números de área deben ser números.");
+                        break;
+                    }
 
                     VerticeTrasladosEntreaAreas areaOrigen = grafo.getArea(numOrigen);
                     VerticeTrasladosEntreaAreas areaDestino = grafo.getArea(numDestino);
@@ -141,25 +196,29 @@ public class Gestion_Hospital {
                         JOptionPane.showMessageDialog(null, "Número de área inválido.");
                         break;
                     }
-
                     JOptionPane.showMessageDialog(null, grafo.rutaOptima(areaOrigen.nombreDelAreaDeTraslado(), areaDestino.nombreDelAreaDeTraslado()));
                 }
 
                 case 7 -> {
+                    String resultado = grafo.mostrar();
                     JOptionPane.showMessageDialog(null,
-                            grafo.mostrar().isEmpty() ? "Sin datos" : grafo.mostrar());
+                            resultado.isEmpty() ? "Sin datos" : resultado);
                 }
 
                 case 8 -> {
+                    String resultado = cola.mostrar();
                     JOptionPane.showMessageDialog(null,
-                            cola.mostrar().isEmpty() ? "Cola vacía" : cola.mostrar());
+                            resultado.isEmpty() ? "Cola vacía" : resultado);
                 }
+
                 case 9 -> {
                     JOptionPane.showMessageDialog(null, "Saliendo...");
                     ejecutandose = false;
                 }
-            }
 
+                default ->
+                    JOptionPane.showMessageDialog(null, "Opción no válida. Ingrese un número del 1 al 9.");
+            }
         }
     }
 }

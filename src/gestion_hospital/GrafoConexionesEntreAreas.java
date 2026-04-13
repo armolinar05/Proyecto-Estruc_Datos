@@ -153,5 +153,5 @@ public class GrafoConexionesEntreAreas {
         return "Ruta óptima:\n" + ruta.toString();
     }
 
-    //agregar metodo  de traslado de pacientes, **investigar lo de rutas optimas
+   
 }
