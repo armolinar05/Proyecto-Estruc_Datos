@@ -1,62 +1,29 @@
 package gestion_hospital;
 
 public class Paciente {
-
     private int id;
     private String nombre;
-    private int edad;
     private int prioridad;
     private String diagnostico;
-    private VerticeTrasladosEntreaAreas AreaActualDelPaciente;
+    private VerticeTrasladosEntreaAreas area;
 
-    public Paciente(int id, String nombre, int prioridad, String diagnostico, VerticeTrasladosEntreaAreas AreaActualDelPaciente) {
+    public Paciente(int id, String nombre, int prioridad, String diagnostico, VerticeTrasladosEntreaAreas area) {
         this.id = id;
         this.nombre = nombre;
         this.prioridad = prioridad;
         this.diagnostico = diagnostico;
-        this.AreaActualDelPaciente = AreaActualDelPaciente;
-        
-        
+        this.area = area;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public int getPrioridad() {
-        return prioridad;
-    }
-
-    public void setPrioridad(int prioridad) {
-        this.prioridad = prioridad;
-    }
-
-    public String getDiagnostico() {
-        return diagnostico;
-    }
-
-    public void setDiagnostico(String diagnostico) {
-        this.diagnostico = diagnostico;
-    }
-
-    
-    
+    public int getId() { return id; }
+    public String getNombre() { return nombre; }
+    public int getPrioridad() { return prioridad; }
+    public String getDiagnostico() { return diagnostico; }
+    public VerticeTrasladosEntreaAreas getArea() { return area; }
 
     @Override
     public String toString() {
-        return "Paciente{" + "id:" + id + ", nombre:" + nombre + ", prioridad:" + prioridad + ", diagnostico:" + diagnostico +
-                "Area actual del paciente" +  AreaActualDelPaciente + '}';
+        String nArea = (area != null) ? area.nombreDelAreaDeTraslado() : "Sin area asignada";
+        return "ID: " + id + " | Paciente: " + nombre + " | Prioridad: " + prioridad + " | Area: " + nArea;
     }
-
 }

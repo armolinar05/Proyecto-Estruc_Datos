@@ -8,6 +8,9 @@ public class Gestion_Hospital {
         ArbolBinario arbol = new ArbolBinario();
         ColaPrioridad cola = new ColaPrioridad();
         GrafoConexionesEntreAreas grafo = new GrafoConexionesEntreAreas();
+        
+        ArchivoAdmin.obtener_DatosPacientes(arbol);
+        
         boolean ejecutandose = true;
         int opcion;
 
@@ -15,7 +18,7 @@ public class Gestion_Hospital {
 
             String menu = """
                     === HOSPITAL ===
-                          
+                                      
                     1. Agregar área del hospital      
                     2. Registrar paciente
                     3. Mostrar árbol
@@ -42,15 +45,31 @@ public class Gestion_Hospital {
             switch (opcion) {
                 case 1 -> {
                     String nombreArea = JOptionPane.showInputDialog("Nombre del área:");
+
                     if (nombreArea == null || nombreArea.trim().isEmpty()) {
                         JOptionPane.showMessageDialog(null, "El nombre del área no puede estar vacío.");
                         break;
                     }
-                    if (!nombreArea.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
+
+                    boolean esValido = true;
+                    String nombreTrim = nombreArea.trim();
+
+                    for (int i = 0; i < nombreTrim.length(); i++) {
+                        char c = nombreTrim.charAt(i);
+                        if (!Character.isLetter(c) && c != ' ') {
+                            esValido = false;
+                            break;
+                        }
+                    }
+
+                    if (!esValido) {
                         JOptionPane.showMessageDialog(null, "El nombre del área solo puede contener letras.");
                         break;
                     }
-                    grafo.nuevoVertice(nombreArea.trim());
+
+                    grafo.nuevoVertice(nombreTrim);
+
+                    JOptionPane.showMessageDialog(null, "¡Área '" + nombreTrim + "' registrada exitosamente!");
                 }
 
                 case 2 -> {
@@ -61,9 +80,10 @@ public class Gestion_Hospital {
                     int id;
                     try {
                         String idInput = JOptionPane.showInputDialog("Cédula:");
-                        id = Integer.parseInt(idInput);
+                        if (idInput == null) break; 
+                        id = Integer.parseInt(idInput.trim());
                     } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "La cédula debe ser un número.");
+                        JOptionPane.showMessageDialog(null, "La cédula debe ser un número entero.");
                         break;
                     }
 
@@ -72,33 +92,33 @@ public class Gestion_Hospital {
                         JOptionPane.showMessageDialog(null, "El nombre no puede estar vacío.");
                         break;
                     }
-                    if (!nombre.matches("[a-zA-ZáéíóúÁÉÍÓÚñÑ ]+")) {
-                        JOptionPane.showMessageDialog(null, "El nombre solo puede contener letras.");
-                        break;
-                    }
 
                     int prioridad;
                     try {
-                        String prioridadInput = JOptionPane.showInputDialog("Prioridad:");
-                        prioridad = Integer.parseInt(prioridadInput);
+                        String prioridadInput = JOptionPane.showInputDialog("Prioridad 1-5 (1 -> Urgente, 5 -> Leve):");
+                        if (prioridadInput == null) break;
+                        prioridad = Integer.parseInt(prioridadInput.trim());
+
+                        if (prioridad < 1 || prioridad > 5) {
+                            JOptionPane.showMessageDialog(null, "Prioridad inválida. Debe ser un número entre 1 y 5.");
+                            break;
+                        }
                     } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "La prioridad debe ser un número.");
+                        JOptionPane.showMessageDialog(null, "La prioridad debe ser un número válido entre 1 y 5.");
                         break;
                     }
 
                     String diagnostico = JOptionPane.showInputDialog("Diagnóstico:");
-                    if (diagnostico == null || diagnostico.trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "El diagnóstico no puede estar vacío.");
-                        break;
-                    }
+                    if (diagnostico == null) diagnostico = "Sin diagnóstico";
 
                     VerticeTrasladosEntreaAreas areaActual;
                     try {
                         String areaInput = JOptionPane.showInputDialog(areasDisponibles + "Área del paciente (escriba el número):");
-                        int numAreaElegida = Integer.parseInt(areaInput) - 1;
+                        if (areaInput == null) break;
+                        int numAreaElegida = Integer.parseInt(areaInput.trim()) - 1;
                         areaActual = grafo.getArea(numAreaElegida);
-                    } catch (NumberFormatException e) {
-                        JOptionPane.showMessageDialog(null, "El número de área debe ser un número.");
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Error al seleccionar el área. Verifique que el número exista.");
                         break;
                     }
 
@@ -108,9 +128,13 @@ public class Gestion_Hospital {
                     }
 
                     Paciente p = new Paciente(id, nombre.trim(), prioridad, diagnostico.trim(), areaActual);
-                    arbol.insertar(p);
-                    cola.encolar(p);
-                    JOptionPane.showMessageDialog(null, "Paciente registrado en: " + areaActual.nombreDelAreaDeTraslado());
+
+                    if (arbol.insertar(p)) {
+                        ArchivoAdmin.guardarPacientes(arbol);
+                        JOptionPane.showMessageDialog(null, "¡Paciente " + nombre.trim() + " registrado correctamente en " + areaActual.nombreDelAreaDeTraslado() + "!");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error: Ya existe un paciente con la cédula " + id);
+                    }
                 }
 
                 case 3 -> {
@@ -129,14 +153,13 @@ public class Gestion_Hospital {
                     String resultado = "";
                     switch (opcionArbol.trim()) {
                         case "1" ->
-                            resultado = arbol.mostrarInOrden();
+                            resultado = arbol.mostrarInOrden(arbol.getRaiz());
                         case "2" ->
-                            resultado = arbol.mostrarPreOrden();
+                            resultado = arbol.mostrarPreOrden(arbol.getRaiz());
                         case "3" ->
-                            resultado = arbol.mostrarPostOrden();
+                            resultado = arbol.mostrarPostOrden(arbol.getRaiz());
                         default -> {
                             JOptionPane.showMessageDialog(null, "Opción inválida.");
-                            break;
                         }
                     }
 
@@ -146,9 +169,23 @@ public class Gestion_Hospital {
                 }
 
                 case 4 -> {
-                    Paciente atendido = cola.atender();
-                    JOptionPane.showMessageDialog(null,
-                            atendido != null ? "Atendido:\n" + atendido : "No hay pacientes en la cola.");
+                    cola.vaciar();
+                    if (arbol.getRaiz() == null) {
+                        JOptionPane.showMessageDialog(null, "No hay pacientes pendientes.");
+                        break;
+                    }
+
+                    arbol.transferirAColaPostOrden(arbol.getRaiz(), cola);
+
+                    Paciente atendido = cola.atender(); 
+
+                    if (atendido != null) {
+                        arbol.eliminar(atendido.getId());
+
+                        ArchivoAdmin.guardarPacientes(arbol); 
+
+                        JOptionPane.showMessageDialog(null, "Paciente atendido: " + atendido.getNombre());
+                    }
                 }
 
                 case 5 -> {
@@ -212,6 +249,7 @@ public class Gestion_Hospital {
                 }
 
                 case 9 -> {
+                    ArchivoAdmin.guardarPacientes(arbol);
                     JOptionPane.showMessageDialog(null, "Saliendo...");
                     ejecutandose = false;
                 }
